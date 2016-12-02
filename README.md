@@ -16,68 +16,11 @@ The applications are built on top of the [rgbdtools](https://github.com/ccny-ros
 
 This code is at an experimental stage, and licensed under the GPLv3 license.
 
-Installing
+This fork
 -----------------------------------
+Catkinized the package to make it work in ROS Indigo. Assumed librgbdtools is installed in your computer.
+Use only the visual_odometry node to compute odometry from RGBD data onboard a small UAV. Specific launch file to test from bags.
 
-### From source ###
-
-Create a directory where you want the package downloaded (ex. `~/ros`), 
-and make sure it's added to your`$ROS_PACKAGE_PATH`.
-
-If you don't have git installed, do so:
-
-    sudo apt-get install git-core
-
-Download the stack from our repository:
-
-    git clone https://github.com/ccny-ros-pkg/ccny_rgbd_tools.git
-
-Install any dependencies using rosdep.
-
-    rosdep install ccny_rgbd_tools
-
-Alternatively, you can manually install the dependencies by
-
-    sudo apt-get install libsuitesparse-dev
-
-Compile the stack:
-
-    rosmake ccny_rgbd_tools
-
-If you get an error compiling `ccny_g2o`, it might be because of an incompatible `g2o` installation. Try removing `libg2o`:
-    
-    sudo apt-get remove ros-fuerte-libg2o
-    sudo apt-get remove ros-groovy-libg2o
-
-Quick usage
------------------------------------
-
-Connect your RGB-D camera and launch the Openni device. The openni_launch file will 
-start the driver and the processing nodelets.
-
-    roslaunch ccny_openni_launch openni.launch 
-
-For faster performace, consider using `dynamic reconfigure` to change the sampling rate of 
-the `rgbd_image_proc` nodelet. For example, setting it to to 0.5 will downsample the images by a factor of 2.
-
-Next, launch the visual odometry:
-
-    roslaunch ccny_rgbd vo+mapping.launch
-
-Finally, launch rviz. 
-
-    rosrun rviz rviz
-
-For convenience, you can load the `ccny_rgbd/launch/rviz.cfg` file.
-
-References
------------------------------------
-
-If you use this system in your reasearch, please cite the following paper:
-
-Ivan Dryanovski, Roberto G. Valenti, Jizhong Xiao. 
-*Fast Visual Odometry and Mapping from RGB-D Data*. 
-2013 International Conference on Robotics and Automation (ICRA2013).
 
 More info
 -----------------------------------
