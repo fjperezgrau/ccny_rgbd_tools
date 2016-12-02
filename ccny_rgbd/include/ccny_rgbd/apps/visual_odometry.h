@@ -38,6 +38,7 @@
 #include "ccny_rgbd/FeatureDetectorConfig.h"
 #include "ccny_rgbd/GftDetectorConfig.h"
 #include "ccny_rgbd/StarDetectorConfig.h"
+#include "ccny_rgbd/SurfDetectorConfig.h"
 #include "ccny_rgbd/OrbDetectorConfig.h"
 
 namespace ccny_rgbd {
@@ -45,7 +46,7 @@ namespace ccny_rgbd {
 /** @brief Subscribes to incoming RGBD images and outputs 
  * the position of the moving (base) frame wrt some fixed frame.
  * 
- * The class offers a selection of sparse feature detectors (GFT, ORB, STAR),
+ * The class offers a selection of sparse feature detectors (GFT, ORB, SURF, STAR),
  * as well as a selection of registration algorithms. The default registration 
  * method (ICPProbModel) aligns the incoming 3D sparse features against a persistent
  * 3D feature model, which is continuously updated using a Kalman Filer.
@@ -89,6 +90,7 @@ class VisualOdometry
     
     GftDetectorConfigServerPtr gft_config_server_;    ///< ROS dynamic reconfigure server for GFT params
     StarDetectorConfigServerPtr star_config_server_;  ///< ROS dynamic reconfigure server for STAR params
+    SurfDetectorConfigServerPtr surf_config_server_;  ///< ROS dynamic reconfigure server for SURF params
     OrbDetectorConfigServerPtr orb_config_server_;    ///< ROS dynamic reconfigure server for ORB params
         
     /** @brief Image transport for RGB message subscription */
@@ -128,6 +130,7 @@ class VisualOdometry
      * 
      * Possible values:
      *  - GFT (default)
+     *  - SURF
      *  - STAR
      *  - ORB
      */
@@ -229,6 +232,10 @@ class VisualOdometry
     /** @brief ROS dynamic reconfigure callback function for STAR
      */
     void starReconfigCallback(StarDetectorConfig& config, uint32_t level);
+    
+    /** @brief ROS dynamic reconfigure callback function for SURF
+     */
+    void surfReconfigCallback(SurfDetectorConfig& config, uint32_t level);
     
     /** @brief ROS dynamic reconfigure callback function for ORB
      */

@@ -215,6 +215,7 @@ void VisualOdometry::resetDetector()
   gft_config_server_.reset();
   star_config_server_.reset();
   orb_config_server_.reset();
+  surf_config_server_.reset();
   
   if (detector_type_ == "ORB")
   { 
@@ -223,6 +224,18 @@ void VisualOdometry::resetDetector()
     orb_config_server_.reset(new 
       OrbDetectorConfigServer(ros::NodeHandle(nh_private_, "feature/ORB")));
     
+    // dynamic reconfigure
+    OrbDetectorConfigServer::CallbackType f = boost::bind(
+      &VisualOdometry::orbReconfigCallback, this, _1, _2);
+    orb_config_server_->setCallback(f);
+  }
+  else if (detector_type_ == "SURF")
+  {
+    ROS_WARN("SURF detector not supported. Using ORB instead");
+    feature_detector_.reset(new rgbdtools::OrbDetector());
+    orb_config_server_.reset(new
+      OrbDetectorConfigServer(ros::NodeHandle(nh_private_, "feature/ORB")));
+
     // dynamic reconfigure
     OrbDetectorConfigServer::CallbackType f = boost::bind(
       &VisualOdometry::orbReconfigCallback, this, _1, _2);
@@ -417,7 +430,7 @@ void VisualOdometry::starReconfigCallback(StarDetectorConfig& config, uint32_t l
   star_detector->setThreshold(config.threshold);
   star_detector->setMinDistance(config.min_distance); 
 }
-    
+
 void VisualOdometry::orbReconfigCallback(OrbDetectorConfig& config, uint32_t level)
 {
   rgbdtools::OrbDetectorPtr orb_detector = 

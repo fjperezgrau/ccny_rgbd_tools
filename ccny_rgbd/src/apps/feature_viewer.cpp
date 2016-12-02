@@ -96,12 +96,25 @@ void FeatureViewer::resetDetector()
   gft_config_server_.reset();
   star_config_server_.reset();
   orb_config_server_.reset();
-  
+  surf_config_server_.reset();
+
   if (detector_type_ == "ORB")
   { 
     ROS_INFO("Creating ORB detector");
     feature_detector_.reset(new rgbdtools::OrbDetector());
     orb_config_server_.reset(new 
+      OrbDetectorConfigServer(ros::NodeHandle(nh_private_, "feature/ORB")));
+    
+    // dynamic reconfigure
+    OrbDetectorConfigServer::CallbackType f = boost::bind(
+      &FeatureViewer::orbReconfigCallback, this, _1, _2);
+    orb_config_server_->setCallback(f);
+  }
+  else if (detector_type_ == "SURF")
+  {
+    ROS_WARN("SURF detector not supported. Using ORB instead");
+    feature_detector_.reset(new rgbdtools::OrbDetector());
+    orb_config_server_.reset(new
       OrbDetectorConfigServer(ros::NodeHandle(nh_private_, "feature/ORB")));
     
     // dynamic reconfigure
@@ -313,7 +326,7 @@ void FeatureViewer::starReconfigCallback(StarDetectorConfig& config, uint32_t le
   star_detector->setThreshold(config.threshold);
   star_detector->setMinDistance(config.min_distance); 
 }
-    
+
 void FeatureViewer::orbReconfigCallback(OrbDetectorConfig& config, uint32_t level)
 {
   rgbdtools::OrbDetectorPtr orb_detector = 
