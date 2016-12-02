@@ -18,6 +18,7 @@ This code is at an experimental stage, and licensed under the GPLv3 license.
 
 This fork
 -----------------------------------
+Catkinized the package to make it work in ROS Indigo. Assumed librgbdtools is installed in your computer.
 Use only the visual_odometry node to compute odometry from RGBD data onboard a small UAV. Specific launch file to test from bags.
 
 
